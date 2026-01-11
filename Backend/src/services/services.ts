@@ -1,34 +1,41 @@
 import axios from "axios"
 
-// OR-Tools
+// OR-Tools API
 export async function callOrTools(tasks: any[]) {
   const url = process.env.SOLVER_API_URL
+  if (!url) throw new Error("SOLVER_API_URL non défini")
 
-  if (!url) {
-    throw new Error("SOLVER_API_URL n'est pas défini")
-  }
+  const response = await axios.post(url, tasks, {
+    timeout: 120000
+  })
 
-  const response = await axios.post(url, tasks)
   return response.data
 }
 
-// AI Explanation
+// IA
 export async function generateAIExplanation(planning: any[]) {
   const aiUrl = process.env.AI_MODEL_API
 
+  //Pas d'IA explication simple par défaut
   if (!aiUrl) {
-    throw new Error("AI_MODEL_API n'est pas défini")
+    return generateFallbackExplanation(planning)
   }
 
   try {
-    const response = await axios.post(aiUrl, { planning })
-
-    if (!response.data || !response.data.explanation) {
-      throw new Error("Réponse IA invalide")
-    }
-
+    const response = await axios.post(aiUrl, { planning }, { timeout: 60000 })
     return response.data.explanation
-  } catch (error: any) {
-    throw new Error("Erreur IA: " + error.message)
+  } catch (err) {
+    //Si l'IA échoue donc fallback
+    return generateFallbackExplanation(planning)
   }
+}
+
+// Explication locale simple
+function generateFallbackExplanation(planning: any[]) {
+  return planning
+    .map(
+      (p: any) =>
+        `La tâche "${p.task}" commence au jour ${p.start} et se termine au jour ${p.end}.`
+    )
+    .join(" ")
 }
