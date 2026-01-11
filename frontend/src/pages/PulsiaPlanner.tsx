@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {type JSX, useState} from 'react';
 import { Calendar, Plus, Trash2, Play, AlertCircle, CheckCircle, Loader, ChevronLeft, ChevronRight } from 'lucide-react';
 
 interface Task {
