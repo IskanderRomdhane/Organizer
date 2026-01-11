@@ -1,6 +1,6 @@
 import axios from "axios"
 
-// OR Tools 
+// OR-Tools
 export async function callOrTools(tasks: any[]) {
   const url = process.env.SOLVER_API_URL
 
@@ -12,17 +12,23 @@ export async function callOrTools(tasks: any[]) {
   return response.data
 }
 
-//Explication IA
+// AI Explanation
 export async function generateAIExplanation(planning: any[]) {
   const aiUrl = process.env.AI_MODEL_API
 
   if (!aiUrl) {
-    throw new Error("AI_EXPLAIN_API_URL n'est pas défini")
+    throw new Error("AI_MODEL_API n'est pas défini")
   }
 
-  const response = await axios.post(aiUrl, {
-    planning
-  })
+  try {
+    const response = await axios.post(aiUrl, { planning })
 
-  return response.data.explanation
+    if (!response.data || !response.data.explanation) {
+      throw new Error("Réponse IA invalide")
+    }
+
+    return response.data.explanation
+  } catch (error: any) {
+    throw new Error("Erreur IA: " + error.message)
+  }
 }
