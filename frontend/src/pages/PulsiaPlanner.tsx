@@ -353,9 +353,9 @@ const PulsiiaPlanner: React.FC = () => {
   const generatePlanning = async (): Promise<void> => {
     setLoading(true);
     setError(null);
-
+    const API_URL = import.meta.env.VITE_API_URL
     try {
-      const response = await fetch('http://localhost:3000/ajouterplan', {
+      const response = await fetch(`${API_URL}/ajouterplan`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
