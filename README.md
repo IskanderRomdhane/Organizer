@@ -70,7 +70,7 @@ Le projet est composé de plusieurs parties indépendantes :
   - un prompt stable
   - des réponses conformes aux contraintes du projet
 
-### 4. Frontend (en cours)
+### 4. Frontend
 
 - Interface utilisateur pour saisir les tâches
 - Affichage du planning généré
